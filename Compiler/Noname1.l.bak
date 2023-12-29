@@ -1,0 +1,36 @@
+%option noyywrap
+%{
+	#include<stdio.h>
+	#include"y.tab.h"
+%}
+
+%%
+
+[0-9]+ {yylval.in = atoi(yytext);return NUM;}
+[0-9]*(\.[0-9]+)? {yylval.fl = atof(yytext);return FLO;}
+[a-z] {yylval.in = *yytext-'a' ;return ID;}
+[-+;/*()=><!&|{}] {return *yytext;}
+[ \t\n] ;
+
+"int" {return INT;}
+"float" {return FLOAT;}
+"char" {return CHAR;}
+"string" {return STRING;}
+
+"print" {return PRINT;}
+
+"if" {return IF;}
+"else" {return ELSE;}
+"then" {return	THEN;}
+
+\".+\" {  yylval.st[0]=yyleng-1;
+		int i;
+                for(i=1;i<yylval.st[0];i++)
+	          yylval.st[i]=yytext[i];
+                return CHH;
+		}
+\'.\'  {  yylval.ch=yytext[1];
+	  return CH;
+		}
+
+%%
